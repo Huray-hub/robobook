@@ -5,12 +5,22 @@
   "dependencies": {
     "@types/jest": "24.0.18",
     "@types/node": "12.7.5",
-    "@types/react": "16.9.2",
-    "@types/react-dom": "16.9.0",
+    "@types/redux-logger": "^3.0.7",
+    "add": "^2.0.6",
+    "global": "^4.4.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-logger": "^1.1.0",
+    "react-redux": "^7.1.1",
     "react-scripts": "3.1.1",
-    "typescript": "3.6.3"
+    "react-thunk": "^1.0.0",
+    "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "tslint": "^5.20.0",
+    "tslint-react": "^4.0.0",
+    "typescript": "^3.6.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,6 +44,9 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-redux": "^7.1.2",
     "tachyons": "^4.10.0"
   }
 }

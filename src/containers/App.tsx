@@ -1,9 +1,18 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { AppState } from '../store';
+
+import './App.css';
+
 import CardList from '../components/CardList';
 import SearchBox from '../components/SearchBox';
 import Scroll from '../components/Scroll';
 
-import './App.css';
+import { ISetSearchFieldAction } from '../store/SearchRobots/types';
+import { setSearchField } from '../store/SearchRobots/actions';
+
+import { IRequestRobots} from '../store/RequestRobots/types';
+import { requestRobots} from '../store/RequestRobots/actions';
 
 export interface IRobot {
   name: string;
@@ -12,43 +21,45 @@ export interface IRobot {
 }
 
 interface IAppProps {
+  robots: Array<IRobot>,
+  onRequestRobots: typeof requestRobots,
+  searchField: string,
+  isPending: boolean,
+  onSearchChange: any
+};
+
+const mapStateToProps = (state: AppState) => {
+  return {
+    searchField: state.SearchRobots.searchField,
+    isPending: state.RequestRobots.isPending,
+    robots: state.RequestRobots.robots,
+    error: state.RequestRobots.error
+  }
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    onSearchChange: (event: any) => dispatch(setSearchField(event.target.value)),
+    onRequestRobots: () => dispatch(requestRobots())
+  }
 }
 
-interface IAppState {
-  robots: Array<IRobot>;
-  searchfield: string;
-}
-
-class App extends Component<IAppProps, IAppState> {
-  constructor(props: IAppProps) {
-    super(props)
-    this.state = {
-      robots: [],
-      searchfield: ''
-    }
-  }
-
-  componentDidMount(): void {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response=> response.json())
-      .then(users => {this.setState({ robots: users})});
-  }
-
-  onSearchChange = (event: React.SyntheticEvent<HTMLInputElement>): void => {
-    this.setState({ searchfield: event.currentTarget.value })
+class App extends Component<IAppProps> {
+  componentDidMount() {
+    this.props.onRequestRobots();
   }
 
   render(): JSX.Element {
-    const { robots, searchfield } = this.state;
+    const { searchField, onSearchChange, robots, isPending } = this.props;
     const filteredRobots = robots.filter(robot =>{
-      return robot.name.toLowerCase().includes(searchfield.toLowerCase());
+      return robot.name.toLowerCase().includes(searchField.toLowerCase());
     })
-    return !robots.length ?
+    return isPending ?
       <h1>Loading</h1> :
       (
         <div className='tc'>
-          <h1 className='f1'>RoboBook</h1>
-          <SearchBox searchChange={this.onSearchChange}/>
+          <h1 className='f1'>RoboFriends</h1>
+          <SearchBox searchChange={onSearchChange}/>
           <Scroll>
             <CardList robots={filteredRobots} />
           </Scroll>
@@ -57,5 +68,5 @@ class App extends Component<IAppProps, IAppState> {
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps) (App);
 
